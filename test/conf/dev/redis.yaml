@@ -1,0 +1,6 @@
+default:
+  addr: 127.0.0.1:6379
+  dial_timeout: 1m      # 连接超时时间，单位: millisecond, {default: 5000}
+  read_timeout: 1m      # 读超时时间，单位: millisecond, {default: 1000}
+  write_timeout: 1m     # 写超时时间，单位: millisecond, {default: 1000}
+  pool_size: 500        # 最大连接数大小, {default: runtime.NumCPU*10}
