@@ -2,11 +2,25 @@ package env
 
 import (
 	"strings"
+
+	"github.com/urfave/cli/v2"
 )
 
 const dev = "dev"
 
-var e = dev
+var (
+	e = dev
+
+	FlagEnv = cli.StringFlag{
+		Name:        "e",
+		Aliases:     []string{"env"},
+		Usage:       "run mode, load the config files in 'conf/<env>/*'",
+		Required:    true,
+		Value:       dev,
+		DefaultText: dev,
+		Destination: &e,
+	}
+)
 
 func WithEnv(ee string) {
 	ee = strings.TrimSpace(ee)

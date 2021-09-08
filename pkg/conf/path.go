@@ -1,6 +1,6 @@
 package conf
 
-import "github.com/itozll/ddm/env"
+import "github.com/itozll/ddm/pkg/env"
 
 const _pathRoot = "conf/"
 
@@ -15,6 +15,6 @@ func PathRoot() string {
 	return _pathRoot
 }
 
-func EnvPath() string {
+func PathEnv() string {
 	return _pathRoot + env.Name()
 }
