@@ -1,30 +1,21 @@
-package rcache
+package mysql
 
 import (
-	"context"
 	"errors"
 	"sync"
 
 	"github.com/itozll/ddm/conf"
 )
 
-type (
-	Node struct {
-		Server string `json:"server,omitempty" yaml:"server"`
-		Key    string `json:"key,omitempty" yaml:"key"`
-		Field  string `json:"field,omitempty" yaml:"field"`
-	}
-)
-
 var (
-	_err error
-	once sync.Once
 	mgr  = map[string]*Client{}
+	once sync.Once
+	_err error
 
-	ConfigFile = "redis.yaml"
+	ConfigFile = "mysql.yaml"
 )
 
-func Init() error {
+func Init() (err error) {
 	once.Do(func() {
 		var opts map[string]*Options
 
@@ -41,15 +32,13 @@ func Init() error {
 }
 
 func InitByOptions(opts map[string]*Options) error {
-	ctx := context.Background()
-
 	for key, opt := range opts {
-		m, err := NewRedisPing(ctx, opt)
+		cli, err := New(opt)
 		if err != nil {
 			return errors.New(key + ": " + err.Error())
 		}
 
-		mgr[key] = m
+		mgr[key] = cli
 	}
 
 	return nil
@@ -58,8 +47,17 @@ func InitByOptions(opts map[string]*Options) error {
 func Get(name string) (*Client, error) {
 	m, ok := mgr[name]
 	if !ok {
-		return nil, errors.New("No redis named:" + name)
+		return nil, errors.New("No mysql named: " + name)
 	}
 
 	return m, nil
+}
+
+func GetTable(name string, table string) (*Client, error) {
+	m, ok := mgr[name]
+	if !ok {
+		return nil, errors.New("No mysql named: " + name)
+	}
+
+	return m.Table(table), nil
 }

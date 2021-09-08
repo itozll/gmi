@@ -19,9 +19,9 @@ var (
 	mgr  = map[string]*tMgr{}
 	once sync.Once
 	_err error
-)
 
-var ConfigFile = "mongo.yaml"
+	ConfigFile = "mongo.yaml"
+)
 
 func Init() error {
 	once.Do(func() {
