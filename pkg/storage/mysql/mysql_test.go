@@ -22,16 +22,17 @@ func TestGetByID(t *testing.T) {
 	})
 	t.Log(err, res)
 
-	m.Table("summary").InsertOrUpdate(ctx, map[string]interface{}{
-		"id": 1,
-	}, map[string]interface{}{
-		"clicked": 100000,
-	})
-	t.Log(err, res)
+	type C struct {
+		Id       int64 `gorm:"column:id"`
+		Clicked  int   `gorm:"column:clicked"`
+		Received int   `gorm:"columnd:recevied"`
+	}
+	var c = C{Id: 1, Clicked: 101}
+	err = m.Table("summary").InsertOrUpdate2(
+		ctx,
+		c,
+		"clicked", "received", "content_type",
+	)
 
-	cnt, err := m.Table("summary").Count(ctx, map[string]interface{}{
-		"id": 1,
-	})
-
-	t.Log(err, cnt)
+	t.Log(err)
 }

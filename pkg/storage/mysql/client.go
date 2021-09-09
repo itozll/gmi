@@ -2,12 +2,12 @@ package mysql
 
 import (
 	"context"
-	"errors"
 	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
 )
 
@@ -17,6 +17,8 @@ const (
 )
 
 var DefaultType = TypeMysql
+
+type Column = clause.Column
 
 type Client struct {
 	db *gorm.DB
@@ -68,7 +70,7 @@ func (m *Client) Table(tbl string) *Client {
 
 func (m *Client) DB() *gorm.DB { return m.db }
 
-func (m *Client) GetByID(ctx context.Context, out interface{}, id interface{}) (interface{}, error) {
+func (m *Client) GetByID(_ context.Context, out interface{}, id interface{}) (interface{}, error) {
 	db := m.db.Where("id = ?", id).Scan(out)
 	if db.Error != nil {
 		return nil, db.Error
@@ -81,12 +83,8 @@ func (m *Client) GetByID(ctx context.Context, out interface{}, id interface{}) (
 	return out, nil
 }
 
-func (m *Client) Get(ctx context.Context, out interface{}, filter interface{}) (interface{}, error) {
-	return m.Gets(ctx, out, filter)
-}
-
-func (m *Client) Gets(ctx context.Context, out interface{}, filter interface{}) (interface{}, error) {
-	db := m.db.Where(filter).Scan(out)
+func (m *Client) Gets(_ context.Context, out interface{}, filter interface{}, args ...interface{}) (interface{}, error) {
+	db := m.db.Where(filter, args...).Scan(out)
 	if db.Error != nil {
 		return nil, db.Error
 	}
@@ -98,70 +96,55 @@ func (m *Client) Gets(ctx context.Context, out interface{}, filter interface{}) 
 	return out, nil
 }
 
-func (m *Client) Insert(ctx context.Context, document interface{}) error {
+func (m *Client) Insert(_ context.Context, document interface{}) (rowsAffected int64, err error) {
 	db := m.db.Create(document)
 	if db.Error != nil {
-		return db.Error
+		return 0, db.Error
 	}
 
-	if db.RowsAffected <= 0 {
-		return errors.New("not created")
-	}
-
-	return nil
+	return db.RowsAffected, nil
 }
 
-func (m *Client) Update(ctx context.Context, filter interface{}, update interface{}) error {
-	db := m.db.Where(filter).Updates(update)
+func (m *Client) Update(_ context.Context, update interface{}, filter interface{}, args ...interface{}) (rowsAffected int64, err error) {
+	db := m.db.Where(filter, args...).Updates(update)
 	if db.Error != nil {
-		return db.Error
+		return 0, db.Error
 	}
 
-	if db.RowsAffected <= 0 {
-		return errors.New("not updated")
+	return db.RowsAffected, nil
+}
+
+var _columns = []clause.Column{{Name: "id"}}
+
+func (m *Client) InsertOrUpdate(_ context.Context, insert interface{}, update map[string]interface{}) error {
+	onConflict := clause.OnConflict{
+		Columns: _columns,
+	}
+	if update == nil {
+		onConflict.DoNothing = true
+	} else {
+		onConflict.DoUpdates = clause.Assignments(update)
 	}
 
-	return nil
+	return m.db.Clauses(onConflict).Create(insert).Error
 }
 
-func (m *Client) UpdateMany(ctx context.Context, filter interface{}, update interface{}) error {
-	return m.Update(ctx, filter, update)
-}
-
-func (m *Client) InsertOrUpdate(ctx context.Context, filter interface{}, update interface{}) {
-	var v = map[string]interface{}{}
-	db := m.db.Where(filter)
-	db0 := db.Scan(&v)
-	var err error
-
-	if db0.RowsAffected <= 0 {
-		err = m.Insert(ctx, update)
-		if err == nil {
-			return
-		}
+func (m *Client) InsertOrUpdate2(_ context.Context, insert interface{}, updateColumns ...string) error {
+	onConflict := clause.OnConflict{
+		Columns: _columns,
 	}
 
-	db.Updates(update)
-}
-
-func (m *Client) InsertOrUpdate2(ctx context.Context, filter interface{}, update interface{}) {
-	var v = map[string]interface{}{}
-	db := m.db.Where(filter)
-	db0 := db.Scan(&v)
-	var err error
-
-	if db0.RowsAffected <= 0 {
-		err = m.Insert(ctx, update)
-		if err == nil {
-			return
-		}
+	if updateColumns == nil {
+		onConflict.DoNothing = true
+	} else {
+		onConflict.DoUpdates = clause.AssignmentColumns(updateColumns)
 	}
 
-	db.Updates(update)
+	return m.db.Clauses(onConflict).Create(insert).Error
 }
 
-func (m *Client) Count(ctx context.Context, filter interface{}) (int64, error) {
+func (m *Client) Count(_ context.Context, filter interface{}, args ...interface{}) (int64, error) {
 	var cnt int64
-	db := m.db.Where(filter).Count(&cnt)
+	db := m.db.Where(filter, args...).Count(&cnt)
 	return cnt, db.Error
 }
