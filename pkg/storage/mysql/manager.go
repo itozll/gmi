@@ -33,7 +33,7 @@ func Init() (err error) {
 
 func InitByOptions(opts map[string]*Options) error {
 	for key, opt := range opts {
-		cli, err := New(opt)
+		cli, err := newClient(opt)
 		if err != nil {
 			return errors.New(key + ": " + err.Error())
 		}
@@ -47,17 +47,12 @@ func InitByOptions(opts map[string]*Options) error {
 func Get(name string) (*Client, error) {
 	m, ok := mgr[name]
 	if !ok {
-		return nil, errors.New("No mysql named: " + name)
+		return nil, errors.New("no mysql named: " + name)
 	}
 
 	return m, nil
 }
 
-func GetTable(name string, table string) (*Client, error) {
-	m, ok := mgr[name]
-	if !ok {
-		return nil, errors.New("No mysql named: " + name)
-	}
-
-	return m.Table(table), nil
+func GetModel(name string, table string) (*Model, error) {
+	return New(table, name)
 }
