@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/itozll/ddm/pkg/conf"
+	"github.com/itozll/gmi/pkg/conf"
 )
 
 type (

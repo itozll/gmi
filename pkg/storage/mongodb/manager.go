@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/itozll/ddm/pkg/conf"
+	"github.com/itozll/gmi/pkg/conf"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

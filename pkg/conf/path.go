@@ -1,6 +1,6 @@
 package conf
 
-import "github.com/itozll/ddm/pkg/env"
+import "github.com/itozll/gmi/pkg/env"
 
 const _pathRoot = "conf/"
 

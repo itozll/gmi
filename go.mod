@@ -1,4 +1,4 @@
-module github.com/itozll/ddm
+module github.com/itozll/gmi
 
 go 1.17
 

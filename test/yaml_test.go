@@ -3,8 +3,8 @@ package test
 import (
 	"testing"
 
-	"github.com/itozll/ddm/pkg/conf"
-	"github.com/itozll/ddm/pkg/env"
+	"github.com/itozll/gmi/pkg/conf"
+	"github.com/itozll/gmi/pkg/env"
 )
 
 type vt struct {
