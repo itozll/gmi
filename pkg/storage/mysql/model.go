@@ -30,6 +30,21 @@ func New2(tbl, dbName string) *Model {
 	return &Model{tbl: tbl, db: cli.db}
 }
 
+// InsteadOf 替换 *gorm.DB
+/**
+ * m0 := New("a", "default")
+ * m1 := New("b", "default")
+ * ...
+ * m0.Transaction(func(cli *Model) error {
+ * 	cli is "a"
+ * 	mm1 := m1.InsteadOf(cli.DB())
+ *  now mm1 is "b"
+ * })
+**/
+func (m *Model) InsteadOf(tx *gorm.DB) *Model {
+	return &Model{tbl: m.tbl, db: tx}
+}
+
 func (m *Model) Table() string { return m.tbl }
 
 func (m *Model) DB() *gorm.DB {
