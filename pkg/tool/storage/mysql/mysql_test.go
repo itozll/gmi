@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/itozll/gmi/pkg/storage/mysql"
+	"github.com/itozll/gmi/pkg/tool/storage/mysql"
 )
 
 type C struct {

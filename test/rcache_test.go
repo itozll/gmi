@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/itozll/gmi/pkg/cache/rcache"
+	"github.com/itozll/gmi/pkg/tool/cache/rcache"
 )
 
 func TestRedis(t *testing.T) {
