@@ -1,10 +1,10 @@
-package mysql_test
+package ggorm_test
 
 import (
 	"context"
 	"testing"
 
-	"github.com/itozll/gmi/pkg/tool/storage/mysql"
+	"github.com/itozll/gmi/pkg/tool/storage/ggorm"
 )
 
 type C struct {
@@ -16,7 +16,7 @@ type C struct {
 var ctx = context.Background()
 
 func init() {
-	mysql.InitByOptions(map[string]*mysql.Options{
+	ggorm.InitByOptions(map[string]*ggorm.Options{
 		"default": {
 			Dsn:   "root:qweASD12#@/push_statistics?charset=utf8&parseTime=True",
 			Debug: true,
@@ -25,7 +25,7 @@ func init() {
 }
 
 func TestGetByID(t *testing.T) {
-	m, err := mysql.New("summary1", "default")
+	m, err := ggorm.New("summary1", "default")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,12 +48,12 @@ func TestGetByID(t *testing.T) {
 }
 
 func TestTransaction(t *testing.T) {
-	m, err := mysql.New("summary1", "default")
+	m, err := ggorm.New("summary1", "default")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	m.Transaction(func(cli *mysql.Model) error {
+	m.Transaction(func(cli *ggorm.Model) error {
 		cli.Update(ctx, &C{
 			Clicked:  103,
 			Received: 203,

@@ -1,4 +1,4 @@
-package mysql
+package ggorm
 
 type Options struct {
 	Dsn                    string `json:"dsn,omitempty" yaml:"dsn" toml:"dsn"`
