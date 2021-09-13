@@ -3,8 +3,8 @@ package test
 import (
 	"testing"
 
-	"github.com/itozll/gmi/pkg/conf"
 	"github.com/itozll/gmi/pkg/env"
+	"github.com/itozll/gmi/pkg/gconf"
 )
 
 type vt struct {
@@ -16,23 +16,23 @@ func TestConf(t *testing.T) {
 	for _, mode := range []string{"dev", "prd"} {
 		var out0 vt
 		env.WithEnv(mode)
-		_, err := conf.AutoLoadYaml(&out0, "app")
+		_, err := gconf.AutoLoadYaml(&out0, "app")
 		if err != nil {
 			t.Fatal(err.Error())
 		}
 
 		var out1 vt
-		err = conf.LoadYamlPath(&out1, nil, conf.PathRoot())
+		err = gconf.LoadYamlPath(&out1, nil, gconf.PathRoot())
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		err = conf.LoadYamlPath(&out1, nil, conf.PathRoot()+mode+"/")
+		err = gconf.LoadYamlPath(&out1, nil, gconf.PathRoot()+mode+"/")
 		if err != nil {
 			t.Fatal(err.Error())
 		}
 
 		var out2 vt
-		err = conf.LoadMultiYamlPath(&out2, nil, conf.PathRoot(), conf.PathRoot()+mode+"/")
+		err = gconf.LoadMultiYamlPath(&out2, nil, gconf.PathRoot(), gconf.PathRoot()+mode+"/")
 		if err != nil {
 			t.Fatal(err.Error())
 		}

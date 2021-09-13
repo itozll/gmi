@@ -1,4 +1,4 @@
-package conf
+package gconf
 
 type FuncOption func(*Options)
 

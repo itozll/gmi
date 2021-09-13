@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/itozll/gmi/pkg/conf"
+	"github.com/itozll/gmi/pkg/gconf"
 )
 
 type (
@@ -28,7 +28,7 @@ func Init() error {
 	once.Do(func() {
 		var opts map[string]*Options
 
-		f, err := conf.AutoLoadYaml(&opts, ConfigFile)
+		f, err := gconf.AutoLoadYaml(&opts, ConfigFile)
 		if err != nil {
 			_err = errors.New(f + ": " + err.Error())
 			return

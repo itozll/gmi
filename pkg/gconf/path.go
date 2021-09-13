@@ -1,4 +1,4 @@
-package conf
+package gconf
 
 import "github.com/itozll/gmi/pkg/env"
 
