@@ -6,16 +6,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/itozll/gmi/pkg/tool/cache/rcache"
+	"github.com/itozll/gmi/pkg/tool/cache/gcache"
 )
 
 func TestRedis(t *testing.T) {
-	err := rcache.Init()
+	err := gcache.Init()
 	if err != nil {
 		t.Fatal(err.Error())
 	}
 
-	cli, err := rcache.Get("default")
+	cli, err := gcache.Get("default")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -33,7 +33,7 @@ func TestRedis(t *testing.T) {
 		i := i
 		go func() {
 			defer wg.Done()
-			lock := rcache.NewLocker(cli)
+			lock := gcache.NewLocker(cli)
 			val := lock.Lock(context.TODO(), "111", 1*time.Second, 5*time.Second)
 
 			t.Log(i, val, time.Now())
