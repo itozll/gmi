@@ -4,7 +4,7 @@
 
 package merge
 
-func (p *Map) Push(data map[string]interface{}) error { // 合并功能提供商
+func (p *Map) Push(data map[string]interface{}) error {
 	for _, val := range data {
 		if _, ok := val.(Handle); !ok {
 			panic("any element must be Handle")
