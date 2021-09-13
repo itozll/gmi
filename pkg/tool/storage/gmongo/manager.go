@@ -7,12 +7,11 @@ import (
 	"time"
 
 	"github.com/itozll/gmi/pkg/gconf"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type tMgr struct {
 	once sync.Once
-	m    *Mongo
+	m    *Client
 }
 
 var (
@@ -41,7 +40,7 @@ func Init() error {
 
 func InitByOptions(opts map[string]*Options) error {
 	for key, opt := range opts {
-		cli, err := New(opt)
+		cli, err := newClient(opt)
 		if err != nil {
 			return errors.New(key + ": " + err.Error())
 		}
@@ -52,7 +51,7 @@ func InitByOptions(opts map[string]*Options) error {
 	return nil
 }
 
-func GetMongo(name string) (*Mongo, error) {
+func Get(name string) (*Client, error) {
 	m, ok := mgr[name]
 	if !ok {
 		return nil, errors.New("No mongo named: " + name)
@@ -69,11 +68,6 @@ func GetMongo(name string) (*Mongo, error) {
 	return m.m, err
 }
 
-func GetCollection(name, coll string) (*mongo.Collection, error) {
-	m, err := GetMongo(name)
-	if err != nil {
-		return nil, err
-	}
-
-	return m.Collection(coll), nil
+func GetModel(table, name string) (*Model, error) {
+	return New(table, name)
 }

@@ -53,6 +53,6 @@ func Get(name string) (*Client, error) {
 	return m, nil
 }
 
-func GetModel(name string, table string) (*Model, error) {
+func GetModel(table, name string) (*Model, error) {
 	return New(table, name)
 }

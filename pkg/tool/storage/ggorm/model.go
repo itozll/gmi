@@ -3,11 +3,14 @@ package ggorm
 import (
 	"context"
 
+	"github.com/itozll/gmi/pkg/tool/storage/internal/dbms"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type Model struct {
+	dbms.DBMS
+
 	tbl string
 	db  *gorm.DB
 }
@@ -45,16 +48,19 @@ func (m *Model) InsteadOf(tx *gorm.DB) *Model {
 	return &Model{tbl: m.tbl, db: tx}
 }
 
+func (m *Model) IsMysql() bool { return true }
 func (m *Model) Table() string { return m.tbl }
 
 func (m *Model) DB() *gorm.DB {
 	return m.db.Table(m.tbl)
 }
 
-func (m *Model) GetByID(_ context.Context, out interface{}, id interface{}) (interface{}, error) {
+func (m *Model) GetById(_ context.Context, out interface{}, id interface{}) (interface{}, error) {
 	db := m.DB().Where("id = ?", id).Scan(out)
 	if db.Error != nil {
-		return nil, db.Error
+		if db.Error != gorm.ErrRecordNotFound {
+			return nil, db.Error
+		}
 	}
 
 	if db.RowsAffected <= 0 {
