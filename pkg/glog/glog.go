@@ -20,9 +20,9 @@ func New(opt *Options) Logger {
 		opt.getAddCaller()...,
 	)
 
-	return &glog{
+	return (&glog{
 		l: l,
-	}
+	})
 }
 
 func Attach(l *zap.Logger) Logger {
@@ -41,7 +41,8 @@ func (g *glog) WithFields(key string, val interface{}, kvs ...interface{}) Logge
 		for i := 0; i < len(kvs)-1; i++ {
 			key, ok := kvs[i].(string)
 			if !ok {
-				continue
+				g.AddCallerSkip(1).WithFields("_item_key", kvs[i], "_err_message", "param must be string").Warn("LogError")
+				break
 			}
 
 			f = append(f, zap.Any(key, kvs[i+1]))

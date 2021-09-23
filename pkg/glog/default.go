@@ -16,9 +16,9 @@ func WithFields(key string, val interface{}, kvs ...interface{}) Logger {
 	return dfl.WithFields(key, val, kvs...)
 }
 
-func Debug(msg string) { dfl.AddCallerSkip(1).Debug(msg) }
-func Info(msg string)  { dfl.AddCallerSkip(1).Info(msg) }
-func Warn(msg string)  { dfl.AddCallerSkip(1).Warn(msg) }
-func Error(msg string) { dfl.AddCallerSkip(1).Error(msg) }
-func Fatal(msg string) { dfl.AddCallerSkip(1).Fatal(msg) }
-func Panic(msg string) { dfl.AddCallerSkip(1).Panic(msg) }
+func Debug(msg string) { dfl.Debug(msg) }
+func Info(msg string)  { dfl.Info(msg) }
+func Warn(msg string)  { dfl.Warn(msg) }
+func Error(msg string) { dfl.Error(msg) }
+func Fatal(msg string) { dfl.Fatal(msg) }
+func Panic(msg string) { dfl.Panic(msg) }
